@@ -7,6 +7,7 @@ export function DropZone() {
   const isUploading = useUploadStore((s) => s.isUploading);
   const progress = useUploadStore((s) => s.progress);
   const error = useUploadStore((s) => s.error);
+  const errorHint = useUploadStore((s) => s.errorHint);
   const [isDragOver, setIsDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -104,12 +105,23 @@ export function DropZone() {
       </div>
 
       {error && (
-        <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
-          <span className="text-red-400 text-lg">⚠</span>
-          <div>
-            <p className="text-sm font-medium text-red-400">Fehler beim Verarbeiten</p>
-            <p className="text-sm text-red-400/70 mt-0.5">{error}</p>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-lg">
+            <span className="text-red-400 text-lg">⚠</span>
+            <div>
+              <p className="text-sm font-medium text-red-400">Fehler beim Verarbeiten</p>
+              <p className="text-sm text-red-400/70 mt-0.5">{error}</p>
+            </div>
           </div>
+          {errorHint && (
+            <div className="flex items-start gap-3 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
+              <span className="text-blue-400 text-base">💡</span>
+              <div>
+                <p className="text-xs font-semibold text-blue-400 uppercase tracking-wide mb-0.5">Lösung</p>
+                <p className="text-sm text-blue-300/80">{errorHint}</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
