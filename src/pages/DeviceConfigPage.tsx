@@ -7,6 +7,7 @@ import { useDiagStore } from '../stores/diagStore';
 import { useFilteredData } from '../hooks/useTableFilters';
 import { useNavigate } from 'react-router-dom';
 import type { ConfigProfile } from '../types/diagReport.types';
+import { getProfileHint } from '../utils/intuneHints';
 
 export function DeviceConfigPage() {
   const isLoaded = useDiagStore((s) => s.isLoaded);
@@ -46,6 +47,20 @@ export function DeviceConfigPage() {
     },
     { key: 'lastApplied' as const, label: 'Zuletzt angewendet' },
     { key: 'details' as const, label: 'Details' },
+    {
+      key: 'status' as const,
+      label: 'Lösungshinweis',
+      render: (_val: unknown, row: unknown) => {
+        const hint = getProfileHint(row as ConfigProfile);
+        if (!hint) return <span className="text-gray-700">—</span>;
+        return (
+          <span className="flex items-start gap-1.5 text-xs text-amber-300/80">
+            <span className="mt-0.5 shrink-0">💡</span>
+            {hint.text}
+          </span>
+        );
+      },
+    },
   ];
 
   if (!isLoaded) {

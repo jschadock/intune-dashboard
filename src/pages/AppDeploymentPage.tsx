@@ -7,6 +7,7 @@ import { useDiagStore } from '../stores/diagStore';
 import { useFilteredData } from '../hooks/useTableFilters';
 import { useNavigate } from 'react-router-dom';
 import type { AppDeployment } from '../types/diagReport.types';
+import { getAppHint } from '../utils/intuneHints';
 
 export function AppDeploymentPage() {
   const isLoaded = useDiagStore((s) => s.isLoaded);
@@ -44,6 +45,20 @@ export function AppDeploymentPage() {
       key: 'installState' as const,
       label: 'Status',
       render: (val: unknown) => <StatusBadge status={String(val)} />,
+    },
+    {
+      key: 'installState' as const,
+      label: 'Lösungshinweis',
+      render: (_val: unknown, row: unknown) => {
+        const hint = getAppHint(row as AppDeployment);
+        if (!hint) return <span className="text-gray-700">—</span>;
+        return (
+          <span className="flex items-start gap-1.5 text-xs text-amber-300/80">
+            <span className="mt-0.5 shrink-0">💡</span>
+            {hint.text}
+          </span>
+        );
+      },
     },
   ];
 
